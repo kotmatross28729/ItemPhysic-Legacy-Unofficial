@@ -1,5 +1,26 @@
 package com.creativemd.itemphysic;
 
+import static com.creativemd.itemphysic.ItemPhysic.MODID;
+import static com.creativemd.itemphysic.ItemPhysic.NAME;
+import static com.creativemd.itemphysic.ItemPhysic.VERSION;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.launchwrapper.Launch;
+import net.minecraft.util.EnumChatFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.creativemd.creativecore.common.packet.CreativeCorePacket;
 import com.creativemd.itemphysic.config.ItemConfigSystem;
 import com.creativemd.itemphysic.list.ItemsWithMetaRegistryBurn;
@@ -12,6 +33,7 @@ import com.creativemd.itemphysic.packet.DropPacket;
 import com.creativemd.itemphysic.packet.PickupPacket;
 import com.creativemd.itemphysic.physics.ClientPhysic;
 import com.creativemd.itemphysic.proxy.CommonProxy;
+
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -25,28 +47,10 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.relauncher.FMLLaunchHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.launchwrapper.Launch;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.oredict.OreDictionary;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static com.creativemd.itemphysic.ItemPhysic.MODID;
-import static com.creativemd.itemphysic.ItemPhysic.NAME;
-import static com.creativemd.itemphysic.ItemPhysic.VERSION;
 
 @Mod(modid = MODID, version = VERSION, name = NAME)
 public class ItemPhysic {
+
     public static final String MODID = "itemphysic";
     public static final String NAME = "ItemPhysic";
     public static final String VERSION = "1.2.7" + " kotmatross edition";
@@ -75,20 +79,48 @@ public class ItemPhysic {
         ItemPhysicConfig.loadBurnListConfig(new File(Launch.minecraftHome, configFolder + "BurnList.cfg"));
         ItemPhysicConfig.loadFloatListConfig(new File(Launch.minecraftHome, configFolder + "FloatList.cfg"));
         ItemPhysicConfig.loadExplosionListConfig(new File(Launch.minecraftHome, configFolder + "ExplosionList.cfg"));
-        ItemPhysicConfig.loadUndestroyableListConfig(new File(Launch.minecraftHome, configFolder + "UndestroyableList.cfg"));
-        ItemPhysicConfig.loadSulfuricAcidListConfig(new File(Launch.minecraftHome, configFolder + "SulfuricAcidList.cfg"));
-        ItemPhysicConfig.loadIgnitingItemsListConfig(new File(Launch.minecraftHome, configFolder + "IgnitingItemsList.cfg"));
+        ItemPhysicConfig
+            .loadUndestroyableListConfig(new File(Launch.minecraftHome, configFolder + "UndestroyableList.cfg"));
+        ItemPhysicConfig
+            .loadSulfuricAcidListConfig(new File(Launch.minecraftHome, configFolder + "SulfuricAcidList.cfg"));
+        ItemPhysicConfig
+            .loadIgnitingItemsListConfig(new File(Launch.minecraftHome, configFolder + "IgnitingItemsList.cfg"));
 
         if (!ItemTransformer.isLite) {
-            enableItemDespawn = config.getBoolean("enableItemDespawn", "Item", true, "Whether to allow items to despawn after some times. False to disable despawn.");
-            despawnItem = config.getInt("despawn","Item",6000, 0, 2147483647, "Number of ticks an item takes to despawn (affected by enableItemDespawn).");
-            customPickup = config.getBoolean("customPickup", "Item", false, "Whether to enable a custom pickup mechanic with right click or sneaking (disables auto pickup).");
-            customThrow = config.getBoolean("customThrow", "Item", true, "Whether to enable a custom throwing mechanic when you hold the button.");
-            showPowerText = config.getBoolean("showPowerText", "Item", true, "Whether to enable a \"Power\" text above HUD");
-            disableCactusDamage = config.getBoolean("disableCactusDamage", "Item", true, "Whether to disable cactus damage for items");
-            enableFallSounds = config.getBoolean("enableFallSounds", "Item", true, "Whether to allow items to make a sound when they fall.");
+            enableItemDespawn = config.getBoolean(
+                "enableItemDespawn",
+                "Item",
+                true,
+                "Whether to allow items to despawn after some times. False to disable despawn.");
+            despawnItem = config.getInt(
+                "despawn",
+                "Item",
+                6000,
+                0,
+                2147483647,
+                "Number of ticks an item takes to despawn (affected by enableItemDespawn).");
+            customPickup = config.getBoolean(
+                "customPickup",
+                "Item",
+                false,
+                "Whether to enable a custom pickup mechanic with right click or sneaking (disables auto pickup).");
+            customThrow = config.getBoolean(
+                "customThrow",
+                "Item",
+                true,
+                "Whether to enable a custom throwing mechanic when you hold the button.");
+            showPowerText = config
+                .getBoolean("showPowerText", "Item", true, "Whether to enable a \"Power\" text above HUD");
+            disableCactusDamage = config
+                .getBoolean("disableCactusDamage", "Item", true, "Whether to disable cactus damage for items");
+            enableFallSounds = config
+                .getBoolean("enableFallSounds", "Item", true, "Whether to allow items to make a sound when they fall.");
         }
-        showPickupTooltip = config.getBoolean("showPickupTooltip", "Item", true, "Whether to display the name and description of an item when hovering over it.");
+        showPickupTooltip = config.getBoolean(
+            "showPickupTooltip",
+            "Item",
+            true,
+            "Whether to display the name and description of an item when hovering over it.");
         rotateSpeed = config.getFloat("rotateSpeed", "Item", 1.0F, 0, 100, "Speed of the item rotation.");
         config.save();
 
@@ -102,8 +134,10 @@ public class ItemPhysic {
         event.getModMetadata().authorList.add(EnumChatFormatting.RED + "HRudyPlayZ");
         event.getModMetadata().authorList.add(EnumChatFormatting.AQUA + "Kotmatross");
 
-        event.getModMetadata().url = EnumChatFormatting.GRAY + "https://github.com/kotmatross28729/ItemPhysic-Legacy-Unofficial";
-        event.getModMetadata().description = EnumChatFormatting.GRAY + "A minecraft mod that adds physics to thrown items.";
+        event.getModMetadata().url = EnumChatFormatting.GRAY
+            + "https://github.com/kotmatross28729/ItemPhysic-Legacy-Unofficial";
+        event.getModMetadata().description = EnumChatFormatting.GRAY
+            + "A minecraft mod that adds physics to thrown items.";
     }
 
     @Mod.EventHandler
@@ -112,13 +146,18 @@ public class ItemPhysic {
         proxy.init(this);
         if (!ItemTransformer.isLite) {
             MinecraftForge.EVENT_BUS.register(new EventHandler());
-            FMLCommonHandler.instance().bus().register(new EventHandler());
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new EventHandler());
             initFull();
         } else {
             MinecraftForge.EVENT_BUS.register(new EventHandlerLite());
-            FMLCommonHandler.instance().bus().register(new EventHandlerLite());
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new EventHandlerLite());
         }
     }
+
     @Optional.Method(modid = "creativecore")
     public static void initFull() {
         CreativeCorePacket.registerPacket(DropPacket.class, "IPDrop");
@@ -126,7 +165,7 @@ public class ItemPhysic {
 
         try {
             if (!ItemTransformer.isLite && Loader.isModLoaded("ingameconfigmanager")) ItemConfigSystem.loadConfig();
-        } catch(Exception e) {}
+        } catch (Exception e) {}
     }
 
     @Mod.EventHandler
@@ -134,14 +173,16 @@ public class ItemPhysic {
     public void onRender(TickEvent.RenderTickEvent evt) {
         ClientPhysic.tick = System.nanoTime();
     }
+
     public static boolean isHBMLoaded = false;
 
     @Mod.EventHandler
     public void postInit(FMLPostInitializationEvent event) {
-        if(Loader.isModLoaded("hbm")) {
+        if (Loader.isModLoaded("hbm")) {
             isHBMLoaded = true;
         }
-        //This approach also acts like a hash function, initializing 2 lists at a late stage of loading so that the lists don't have to be checked constantly
+        // This approach also acts like a hash function, initializing 2 lists at a late stage of loading so that the
+        // lists don't have to be checked constantly
         for (String itemName : ItemPhysicConfig.burnList) {
             String modId;
             String itemNameOnly;
@@ -161,14 +202,20 @@ public class ItemPhysic {
                 }
                 Item item = GameRegistry.findItem(modId, itemNameOnly);
                 if (item != null) {
-                    ItemsWithMetaRegistryBurn.ItemWithMetaBurn Item = new ItemsWithMetaRegistryBurn.ItemWithMetaBurn(item, metadata, ignoremeta);
+                    ItemsWithMetaRegistryBurn.ItemWithMetaBurn Item = new ItemsWithMetaRegistryBurn.ItemWithMetaBurn(
+                        item,
+                        metadata,
+                        ignoremeta);
                     ItemsWithMetaRegistryBurn.BurnItems.add(Item);
                 }
-            } else if(parts.length == 1) {
+            } else if (parts.length == 1) {
                 List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                 if (oredictNames.contains(itemName)) {
                     for (ItemStack oreStack : OreDictionary.getOres(itemName)) {
-                        ItemsWithMetaRegistryBurn.ItemWithMetaBurn Item = new ItemsWithMetaRegistryBurn.ItemWithMetaBurn(oreStack.getItem(), oreStack.getItemDamage(), ignoremeta);
+                        ItemsWithMetaRegistryBurn.ItemWithMetaBurn Item = new ItemsWithMetaRegistryBurn.ItemWithMetaBurn(
+                            oreStack.getItem(),
+                            oreStack.getItemDamage(),
+                            ignoremeta);
                         ItemsWithMetaRegistryBurn.BurnItems.add(Item);
                     }
                 }
@@ -191,33 +238,49 @@ public class ItemPhysic {
                         metadata = Integer.parseInt(parts[2]);
                     } catch (NumberFormatException e) {
                         ignoremeta = Boolean.parseBoolean(parts[2]);
-                    } if(!ignoremeta && metadata == 0) {
-                        liquidsList.set(0, parts[2]); //assert that ignoremeta missing (I assure you, no one will write :false)
                     }
-                } else if(parts.length > 3) {
+                    if (!ignoremeta && metadata == 0) {
+                        liquidsList.set(0, parts[2]); // assert that ignoremeta missing (I assure you, no one will write
+                                                      // :false)
+                    }
+                } else if (parts.length > 3) {
                     try {
                         metadata = Integer.parseInt(parts[2]);
                     } catch (NumberFormatException e) {
                         ignoremeta = Boolean.parseBoolean(parts[2]);
                     }
-                    liquidsList.addAll(Arrays.asList(parts).subList(3, parts.length));
+                    liquidsList.addAll(
+                        Arrays.asList(parts)
+                            .subList(3, parts.length));
                 }
                 Item item = GameRegistry.findItem(modId, itemNameOnly);
                 if (item != null) {
                     String[] liquidsArray = liquidsList.toArray(new String[0]);
-                    ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(item, metadata, ignoremeta, liquidsArray);
+                    ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(
+                        item,
+                        metadata,
+                        ignoremeta,
+                        liquidsArray);
                     ItemsWithMetaRegistryFloat.FloatItems.add(Item);
                 }
-            } else if(parts.length == 1) {
+            } else if (parts.length == 1) {
                 List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                 if (oredictNames.contains(itemName)) {
                     for (ItemStack oreStack : OreDictionary.getOres(itemName)) {
                         String[] liquidsArray = liquidsList.toArray(new String[0]);
-                        if(oreStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
-                            ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(oreStack.getItem(), oreStack.getItemDamage(), true, liquidsArray);
+                        if (oreStack.getItemDamage() == OreDictionary.WILDCARD_VALUE) {
+                            ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(
+                                oreStack.getItem(),
+                                oreStack.getItemDamage(),
+                                true,
+                                liquidsArray);
                             ItemsWithMetaRegistryFloat.FloatItems.add(Item);
                         } else {
-                            ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(oreStack.getItem(), oreStack.getItemDamage(), ignoremeta, liquidsArray);
+                            ItemsWithMetaRegistryFloat.ItemWithMetaFloat Item = new ItemsWithMetaRegistryFloat.ItemWithMetaFloat(
+                                oreStack.getItem(),
+                                oreStack.getItemDamage(),
+                                ignoremeta,
+                                liquidsArray);
                             ItemsWithMetaRegistryFloat.FloatItems.add(Item);
                         }
                     }
@@ -243,14 +306,20 @@ public class ItemPhysic {
                 }
                 Item item = GameRegistry.findItem(modId, itemNameOnly);
                 if (item != null) {
-                    ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion Item = new ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion(item, metadata, ignoremeta);
+                    ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion Item = new ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion(
+                        item,
+                        metadata,
+                        ignoremeta);
                     ItemsWithMetaRegistryExplosion.ExplosionItems.add(Item);
                 }
-            } else if(parts.length == 1) {
+            } else if (parts.length == 1) {
                 List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                 if (oredictNames.contains(itemName)) {
                     for (ItemStack oreStack : OreDictionary.getOres(itemName)) {
-                        ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion Item = new ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion(oreStack.getItem(), oreStack.getItemDamage(), ignoremeta);
+                        ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion Item = new ItemsWithMetaRegistryExplosion.ItemsWithMetaExplosion(
+                            oreStack.getItem(),
+                            oreStack.getItemDamage(),
+                            ignoremeta);
                         ItemsWithMetaRegistryExplosion.ExplosionItems.add(Item);
                     }
                 }
@@ -275,20 +344,26 @@ public class ItemPhysic {
                 }
                 Item item = GameRegistry.findItem(modId, itemNameOnly);
                 if (item != null) {
-                    ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable Item = new ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable(item, metadata, ignoremeta);
+                    ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable Item = new ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable(
+                        item,
+                        metadata,
+                        ignoremeta);
                     ItemsWithMetaRegistryUndestroyable.UndestroyableItems.add(Item);
                 }
-            } else if(parts.length == 1) {
+            } else if (parts.length == 1) {
                 List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                 if (oredictNames.contains(itemName)) {
                     for (ItemStack oreStack : OreDictionary.getOres(itemName)) {
-                        ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable Item = new ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable(oreStack.getItem(), oreStack.getItemDamage(), ignoremeta);
+                        ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable Item = new ItemsWithMetaRegistryUndestroyable.ItemWithMetaUndestroyable(
+                            oreStack.getItem(),
+                            oreStack.getItemDamage(),
+                            ignoremeta);
                         ItemsWithMetaRegistryUndestroyable.UndestroyableItems.add(Item);
                     }
                 }
             }
         }
-        if(isHBMLoaded) {
+        if (isHBMLoaded) {
             for (String itemName : ItemPhysicConfig.sulfuricAcidList) {
                 String modId;
                 String itemNameOnly;
@@ -308,14 +383,20 @@ public class ItemPhysic {
                     }
                     Item item = GameRegistry.findItem(modId, itemNameOnly);
                     if (item != null) {
-                        ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid Item = new ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid(item, metadata, ignoremeta);
+                        ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid Item = new ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid(
+                            item,
+                            metadata,
+                            ignoremeta);
                         ItemsWithMetaRegistrySulfuricAcid.SulfuricAcidItems.add(Item);
                     }
                 } else if (parts.length == 1) {
                     List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                     if (oredictNames.contains(itemName)) {
                         for (ItemStack oreStack : OreDictionary.getOres(itemName)) {
-                            ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid Item = new ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid(oreStack.getItem(), oreStack.getItemDamage(), ignoremeta);
+                            ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid Item = new ItemsWithMetaRegistrySulfuricAcid.ItemsWithMetaSulfuricAcid(
+                                oreStack.getItem(),
+                                oreStack.getItemDamage(),
+                                ignoremeta);
                             ItemsWithMetaRegistrySulfuricAcid.SulfuricAcidItems.add(Item);
                         }
                     }
@@ -338,13 +419,15 @@ public class ItemPhysic {
             String[] parts = entry.split(":");
 
             if (parts.length > 4) {
-                if(parts.length == 5) {
+                if (parts.length == 5) {
                     modIdItem = parts[0];
                     itemName = parts[1];
                     modIdBlock = parts[2];
                     blockName = parts[3];
-                    try {igniteChance = Integer.parseInt(parts[4]);}catch (NumberFormatException ignored){}
-                } else if(parts.length == 6) {
+                    try {
+                        igniteChance = Integer.parseInt(parts[4]);
+                    } catch (NumberFormatException ignored) {}
+                } else if (parts.length == 6) {
                     modIdItem = parts[0];
                     itemName = parts[1];
                     try {
@@ -352,7 +435,7 @@ public class ItemPhysic {
                     } catch (NumberFormatException e) {
                         ignoremetaItem = Boolean.parseBoolean(parts[2]);
                     }
-                    if(metadataItem == 0 && !ignoremetaItem){
+                    if (metadataItem == 0 && !ignoremetaItem) {
                         modIdBlock = parts[2];
                         blockName = parts[3];
                         try {
@@ -364,7 +447,9 @@ public class ItemPhysic {
                         modIdBlock = parts[3];
                         blockName = parts[4];
                     }
-                    try {igniteChance = Integer.parseInt(parts[5]);}catch (NumberFormatException ignored){}
+                    try {
+                        igniteChance = Integer.parseInt(parts[5]);
+                    } catch (NumberFormatException ignored) {}
                 } else {
                     modIdItem = parts[0];
                     itemName = parts[1];
@@ -380,38 +465,60 @@ public class ItemPhysic {
                     } catch (NumberFormatException e) {
                         ignoremetaBlock = Boolean.parseBoolean(parts[5]);
                     }
-                    try {igniteChance = Integer.parseInt(parts[6]);}catch (NumberFormatException ignored){}
+                    try {
+                        igniteChance = Integer.parseInt(parts[6]);
+                    } catch (NumberFormatException ignored) {}
                 }
                 Item item = GameRegistry.findItem(modIdItem, itemName);
                 Block block = GameRegistry.findBlock(modIdBlock, blockName);
 
                 if (item != null && block != null) {
-                    ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting ItemAndBlock = new ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting(item, metadataItem, ignoremetaItem, block, metadataBlock, ignoremetaBlock, igniteChance);
+                    ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting ItemAndBlock = new ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting(
+                        item,
+                        metadataItem,
+                        ignoremetaItem,
+                        block,
+                        metadataBlock,
+                        ignoremetaBlock,
+                        igniteChance);
                     ItemsWithMetaRegistryIgniting.IgnitingItems.add(ItemAndBlock);
                 }
-            } else if(parts.length == 4){
+            } else if (parts.length == 4) {
                 String oreDict = parts[0];
                 modIdBlock = parts[1];
                 blockName = parts[2];
-                try {igniteChance = Integer.parseInt(parts[3]);}catch (NumberFormatException ignored){}
+                try {
+                    igniteChance = Integer.parseInt(parts[3]);
+                } catch (NumberFormatException ignored) {}
 
                 Block block = GameRegistry.findBlock(modIdBlock, blockName);
 
                 List<String> oredictNames = Arrays.asList(OreDictionary.getOreNames());
                 if (oredictNames.contains(oreDict)) {
                     for (ItemStack oreStack : OreDictionary.getOres(oreDict)) {
-                        ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting Item = new ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting(oreStack.getItem(), oreStack.getItemDamage(), ignoremetaItem, block, metadataBlock, ignoremetaBlock, igniteChance);
+                        ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting Item = new ItemsWithMetaRegistryIgniting.ItemWithMetaIgniting(
+                            oreStack.getItem(),
+                            oreStack.getItemDamage(),
+                            ignoremetaItem,
+                            block,
+                            metadataBlock,
+                            ignoremetaBlock,
+                            igniteChance);
                         ItemsWithMetaRegistryIgniting.IgnitingItems.add(Item);
                     }
                 }
             }
         }
-        boolean client = FMLLaunchHandler.side().isClient();
-        if(client) {
+        boolean client = FMLLaunchHandler.side()
+            .isClient();
+        if (client) {
             MinecraftForge.EVENT_BUS.register(new ItemPhysicHandler());
-            FMLCommonHandler.instance().bus().register(new ItemPhysicHandler());
+            FMLCommonHandler.instance()
+                .bus()
+                .register(new ItemPhysicHandler());
         }
     }
+
     public static boolean enableItemDespawn;
     public static int despawnItem;
     public static boolean customPickup;

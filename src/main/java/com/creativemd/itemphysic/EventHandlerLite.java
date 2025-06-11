@@ -9,10 +9,10 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 public class EventHandlerLite {
-	
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void renderTick(RenderTickEvent event) {
-		if (event.phase == Phase.END) ClientPhysic.tick = System.nanoTime();
-	}
+
+    @SubscribeEvent
+    @SideOnly(Side.CLIENT)
+    public void renderTick(RenderTickEvent event) {
+        if (event.phase == Phase.END) ClientPhysic.tick = System.nanoTime();
+    }
 }

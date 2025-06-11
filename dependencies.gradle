@@ -37,6 +37,7 @@ dependencies {
     compileOnly name: 'InGameConfigManager+Alpha+v0.1.15+mc1.7.10'
     compile name: 'creativecore-1.3.31-GTNH-dev'
     compileOnly name: 'HBM-NTM-.1.0.27_X5091'
+    
     compileOnly fileTree(dir: 'libs', include: '*.jar')
     compileOnly fileTree(dir: 'libs', include: '*.zip')
 }

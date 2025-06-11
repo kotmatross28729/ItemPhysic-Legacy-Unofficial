@@ -1,9 +1,10 @@
 package com.creativemd.itemphysic.physics;
 
-import com.creativemd.itemphysic.ItemPhysic;
-import cpw.mods.fml.relauncher.ReflectionHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import static net.minecraftforge.client.IItemRenderer.ItemRenderType.ENTITY;
+
+import java.lang.reflect.Field;
+import java.util.Random;
+
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -25,46 +26,50 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.fluids.Fluid;
-import org.apache.logging.log4j.LogManager;
+
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
-import java.lang.reflect.Field;
-import java.util.Objects;
-import java.util.Random;
+import com.creativemd.itemphysic.ItemPhysic;
 
-import static net.minecraftforge.client.IItemRenderer.ItemRenderType.ENTITY;
-import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.BLOCK_3D;
+import cpw.mods.fml.relauncher.ReflectionHelper;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public class ClientPhysic {
 
-	@SideOnly(Side.CLIENT)
-	public static RenderBlocks BlockRenderer = new RenderBlocks();
-	public static RenderItem ItemRenderer = RenderItem.getInstance();
-	public static Random random = new Random();
-	public static Minecraft mc = Minecraft.getMinecraft();
+    @SideOnly(Side.CLIENT)
+    public static RenderBlocks BlockRenderer = new RenderBlocks();
+    public static RenderItem ItemRenderer = RenderItem.getInstance();
+    public static Random random = new Random();
+    public static Minecraft mc = Minecraft.getMinecraft();
 
-	public static long tick;
+    public static long tick;
 
-	public static double rotation;
+    public static double rotation;
 
-	@SideOnly(Side.CLIENT)
-	public static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+    @SideOnly(Side.CLIENT)
+    public static final ResourceLocation RES_ITEM_GLINT = new ResourceLocation(
+        "textures/misc/enchanted_item_glint.png");
 
     private static final Field isInWeb = ReflectionHelper.findField(Entity.class, "isInWeb", "field_70134_J");
 
-//    private static final Field customItemRenderers = ReflectionHelper.findField(MinecraftForgeClient.class, "customItemRenderers");
+    // private static final Field customItemRenderers = ReflectionHelper.findField(MinecraftForgeClient.class,
+    // "customItemRenderers");
 
-	@SideOnly(Side.CLIENT)
-	public static void doRender(Entity par1Entity, double x, double y, double z, float par8, float par9) {
-		rotation = (double)(System.nanoTime()-tick)/2500000* ItemPhysic.rotateSpeed;
-		if (!mc.inGameHasFocus) rotation = 0;
+    @SideOnly(Side.CLIENT)
+    public static void doRender(Entity par1Entity, double x, double y, double z, float par8, float par9) {
+        rotation = (double) (System.nanoTime() - tick) / 2500000 * ItemPhysic.rotateSpeed;
+        if (!mc.inGameHasFocus) rotation = 0;
 
-		EntityItem item = ((EntityItem)par1Entity);
-		ItemStack itemstack = item.getEntityItem();
+        EntityItem item = ((EntityItem) par1Entity);
+        ItemStack itemstack = item.getEntityItem();
 
         if (itemstack.getItem() != null) {
-        	mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(item.getEntityItem().getItemSpriteNumber()));
+            mc.renderEngine.bindTexture(
+                mc.renderEngine.getResourceLocation(
+                    item.getEntityItem()
+                        .getItemSpriteNumber()));
             TextureUtil.func_152777_a(false, false, 1.0F);
             random.setSeed(187L);
             GL11.glPushMatrix();
@@ -77,7 +82,7 @@ public class ClientPhysic {
 
             b0 = getMiniBlockCount(itemstack, b0);
 
-            GL11.glTranslatef((float)x, (float)y, (float)z);
+            GL11.glTranslatef((float) x, (float) y, (float) z);
             GL11.glEnable(GL12.GL_RESCALE_NORMAL);
             float f6;
             float f7;
@@ -85,10 +90,11 @@ public class ClientPhysic {
 
             IItemRenderer customRenderer = MinecraftForgeClient.getItemRenderer(itemstack, ENTITY);
             if ((!ForgeHooksClient.renderEntityItem(item, itemstack, 0, 0, random, mc.renderEngine, BlockRenderer, b0))
-                 && itemstack.getItemSpriteNumber() == 0
-                 && itemstack.getItem() instanceof ItemBlock
-                 && RenderBlocks.renderItemIn3d(Block.getBlockFromItem(itemstack.getItem()).getRenderType()))
-             {
+                && itemstack.getItemSpriteNumber() == 0
+                && itemstack.getItem() instanceof ItemBlock
+                && RenderBlocks.renderItemIn3d(
+                    Block.getBlockFromItem(itemstack.getItem())
+                        .getRenderType())) {
                 Block block = Block.getBlockFromItem(itemstack.getItem());
 
                 if (RenderItem.renderInFrame) {
@@ -96,9 +102,9 @@ public class ClientPhysic {
                     GL11.glTranslatef(0.0F, 0.05F, 0.0F);
                     GL11.glTranslatef(0.0F, 0.09F, 0.0F);
                     GL11.glRotatef(-90.0F, 0.0F, 1.0F, 0.0F);
-                } else if(item.prevPosY != item.posY || item.onGround) {
-                	GL11.glRotatef(item.rotationYaw, 0.0F, 1.0F, 0.0F);
-                	GL11.glRotatef(item.rotationPitch, 1.0F, 0.0F, 0.0F);
+                } else if (item.prevPosY != item.posY || item.onGround) {
+                    GL11.glRotatef(item.rotationYaw, 0.0F, 1.0F, 0.0F);
+                    GL11.glRotatef(item.rotationPitch, 1.0F, 0.0F, 0.0F);
                 }
 
                 float f9 = 0.25F;
@@ -126,57 +132,57 @@ public class ClientPhysic {
                         GL11.glTranslatef(f6, f7, f8);
                     }
 
-                    if (item.rotationPitch > 360)
-                        item.rotationPitch = 0;
+                    if (item.rotationPitch > 360) item.rotationPitch = 0;
 
-                    //ROTATIONS
-                    if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY) && !Double.isNaN(item.posZ) && item.worldObj != null && item.age != 0) {
-                         if (!item.onGround) {
-                    		double rotation = ClientPhysic.rotation*2;
-                    		Fluid fluid = ServerPhysic.getFluid(item);
-                            if(fluid != null)
-                                rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+                    // ROTATIONS
+                    if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY)
+                        && !Double.isNaN(item.posZ)
+                        && item.worldObj != null
+                        && item.age != 0) {
+                        if (!item.onGround) {
+                            double rotation = ClientPhysic.rotation * 2;
+                            Fluid fluid = ServerPhysic.getFluid(item);
+                            if (fluid != null) rotation /= (float) ((fluid.getDensity() / 1000) * 10);
                             else {
                                 fluid = ServerPhysic.getFluid(item, true);
-                                if(fluid != null)
-                                    rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+                                if (fluid != null) rotation /= (float) ((fluid.getDensity() / 1000) * 10);
                             }
-                             try {
-                                 if (isInWeb.getBoolean(item))
-                                     rotation /= 50;
-                             } catch (IllegalArgumentException | IllegalAccessException ignored) {}
-                                item.rotationPitch += rotation;
-                    	}
+                            try {
+                                if (isInWeb.getBoolean(item)) rotation /= 50;
+                            } catch (IllegalArgumentException | IllegalAccessException ignored) {}
+                            item.rotationPitch += rotation;
+                        }
                     }
 
-                    BlockRenderer.renderBlockAsItem(block, itemstack.getItemDamage(), 1.0F); //BLOCK, NOT TESR
+                    BlockRenderer.renderBlockAsItem(block, itemstack.getItemDamage(), 1.0F); // BLOCK, NOT TESR
                     GL11.glPopMatrix();
                 }
 
                 if (block.getRenderBlockPass() > 0) GL11.glDisable(GL11.GL_BLEND);
-            } else if(customRenderer == null) {
+            } else if (customRenderer == null) {
                 float f5;
-                if (/*itemstack.getItemSpriteNumber() == 1 &&*/ itemstack.getItem().requiresMultipleRenderPasses()) {
+                if (/* itemstack.getItemSpriteNumber() == 1 && */ itemstack.getItem()
+                    .requiresMultipleRenderPasses()) {
                     if (RenderItem.renderInFrame) {
                         GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
                         GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                    }
-                    else GL11.glScalef(0.5F, 0.5F, 0.5F);
+                    } else GL11.glScalef(0.5F, 0.5F, 0.5F);
 
-                    for (int j = 0; j < itemstack.getItem().getRenderPasses(itemstack.getItemDamage()); ++j) {
+                    for (int j = 0; j < itemstack.getItem()
+                        .getRenderPasses(itemstack.getItemDamage()); ++j) {
                         random.setSeed(187L);
-                        IIcon iicon1 = itemstack.getItem().getIcon(itemstack, j);
+                        IIcon iicon1 = itemstack.getItem()
+                            .getIcon(itemstack, j);
 
                         if (ItemRenderer.renderWithColor) {
-                            k = itemstack.getItem().getColorFromItemStack(itemstack, j);
-                            f5 = (float)(k >> 16 & 255) / 255.0F;
-                            f6 = (float)(k >> 8 & 255) / 255.0F;
-                            f7 = (float)(k & 255) / 255.0F;
+                            k = itemstack.getItem()
+                                .getColorFromItemStack(itemstack, j);
+                            f5 = (float) (k >> 16 & 255) / 255.0F;
+                            f6 = (float) (k >> 8 & 255) / 255.0F;
+                            f7 = (float) (k & 255) / 255.0F;
                             GL11.glColor4f(f5, f6, f7, 1.0F);
-                            renderDroppedItem(item, iicon1, b0, par9, f5, f6, f7, j); //Seems that don't work
-                        }
-                        else
-                           renderDroppedItem(item, iicon1, b0, par9, 1.0F, 1.0F, 1.0F,  j); //Seems that don't work
+                            renderDroppedItem(item, iicon1, b0, par9, f5, f6, f7, j); // Seems that don't work
+                        } else renderDroppedItem(item, iicon1, b0, par9, 1.0F, 1.0F, 1.0F, j); // Seems that don't work
                     }
                 } else {
                     if (itemstack.getItem() instanceof ItemCloth) {
@@ -188,92 +194,98 @@ public class ClientPhysic {
                     if (RenderItem.renderInFrame) {
                         GL11.glScalef(0.5128205F, 0.5128205F, 0.5128205F);
                         GL11.glTranslatef(0.0F, -0.05F, 0.0F);
-                    }
-                    else GL11.glScalef(0.5F, 0.5F, 0.5F);
-
+                    } else GL11.glScalef(0.5F, 0.5F, 0.5F);
 
                     IIcon iicon = itemstack.getIconIndex();
 
                     if (ItemRenderer.renderWithColor) {
-                        int i = itemstack.getItem().getColorFromItemStack(itemstack, 0);
-                        float f4 = (float)(i >> 16 & 255) / 255.0F;
-                        f5 = (float)(i >> 8 & 255) / 255.0F;
-                        f6 = (float)(i & 255) / 255.0F;
-                        renderDroppedItem(item, iicon, b0, par9, f4, f5, f6); //ITEM, NOT TESR
-                    }
-                    else
-                        renderDroppedItem(item, iicon, b0, par9, 1.0F, 1.0F, 1.0F); //ITEM, NOT TESR
+                        int i = itemstack.getItem()
+                            .getColorFromItemStack(itemstack, 0);
+                        float f4 = (float) (i >> 16 & 255) / 255.0F;
+                        f5 = (float) (i >> 8 & 255) / 255.0F;
+                        f6 = (float) (i & 255) / 255.0F;
+                        renderDroppedItem(item, iicon, b0, par9, f4, f5, f6); // ITEM, NOT TESR
+                    } else renderDroppedItem(item, iicon, b0, par9, 1.0F, 1.0F, 1.0F); // ITEM, NOT TESR
 
                     if (itemstack.getItem() instanceof ItemCloth) GL11.glDisable(GL11.GL_BLEND);
                 }
             }
-            //Not for now, maybe after switching to mixins
-//            else {
-//                if (!RenderItem.renderInFrame) {
-//                    GL11.glRotatef(item.rotationYaw, 0.0F, 1.0F, 0.0F);
-//                    GL11.glRotatef(item.rotationPitch, 1.0F, 0.0F, 0.0F);
-//                }
-//                GL11.glPushMatrix();
-//
-//                if (item.rotationPitch > 360) item.rotationPitch = 0;
-//                    //ROTATIONS
-//                if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY) && !Double.isNaN(item.posZ) && item.worldObj != null && item.age != 0) {
-//                    if (!item.onGround) {
-//                        double rotation = ClientPhysic.rotation*2;
-//                        Fluid fluid = ServerPhysic.getFluid(item);
-//                        if(fluid != null)
-//                            rotation /= (float) ((fluid.getDensity() / 1000) * 10);
-//                        else {
-//                            fluid = ServerPhysic.getFluid(item, true);
-//                            if(fluid != null)
-//                                rotation /= (float) ((fluid.getDensity() / 1000) * 10);
-//                        }
-//                        try {
-//                            if (isInWeb.getBoolean(item))
-//                                rotation /= 50;
-//                        } catch (IllegalArgumentException | IllegalAccessException ignored) {}
-//                            item.rotationPitch += rotation;
-//                        }
-//                    }
-//                customRenderer.renderItem(ENTITY, itemstack);
-//                    GL11.glPopMatrix();
-//            }
+            // Not for now, maybe after switching to mixins
+            // else {
+            // if (!RenderItem.renderInFrame) {
+            // GL11.glRotatef(item.rotationYaw, 0.0F, 1.0F, 0.0F);
+            // GL11.glRotatef(item.rotationPitch, 1.0F, 0.0F, 0.0F);
+            // }
+            // GL11.glPushMatrix();
+            //
+            // if (item.rotationPitch > 360) item.rotationPitch = 0;
+            // //ROTATIONS
+            // if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY) && !Double.isNaN(item.posZ) && item.worldObj !=
+            // null && item.age != 0) {
+            // if (!item.onGround) {
+            // double rotation = ClientPhysic.rotation*2;
+            // Fluid fluid = ServerPhysic.getFluid(item);
+            // if(fluid != null)
+            // rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+            // else {
+            // fluid = ServerPhysic.getFluid(item, true);
+            // if(fluid != null)
+            // rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+            // }
+            // try {
+            // if (isInWeb.getBoolean(item))
+            // rotation /= 50;
+            // } catch (IllegalArgumentException | IllegalAccessException ignored) {}
+            // item.rotationPitch += rotation;
+            // }
+            // }
+            // customRenderer.renderItem(ENTITY, itemstack);
+            // GL11.glPopMatrix();
+            // }
 
             GL11.glDisable(GL12.GL_RESCALE_NORMAL);
             GL11.glPopMatrix();
-            mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(item.getEntityItem().getItemSpriteNumber()));
+            mc.renderEngine.bindTexture(
+                mc.renderEngine.getResourceLocation(
+                    item.getEntityItem()
+                        .getItemSpriteNumber()));
             TextureUtil.func_147945_b();
         }
     }
 
-	public static double formPositiv(float rotationPitch) {
-		if (rotationPitch > 0) return rotationPitch;
-		return -rotationPitch;
-	}
+    public static double formPositiv(float rotationPitch) {
+        if (rotationPitch > 0) return rotationPitch;
+        return -rotationPitch;
+    }
 
-	@SideOnly(Side.CLIENT)
-	public static void renderDroppedItem(EntityItem item, IIcon par2Icon, int par3, float par4, float par5, float par6, float par7) {
+    @SideOnly(Side.CLIENT)
+    public static void renderDroppedItem(EntityItem item, IIcon par2Icon, int par3, float par4, float par5, float par6,
+        float par7) {
         renderDroppedItem(item, par2Icon, par3, par4, par5, par6, par7, 0);
     }
 
-	@SideOnly(Side.CLIENT)
-	public static void renderDroppedItem(EntityItem item, IIcon par2Icon, int par3, float par4, float par5, float par6, float par7, int pass) {
-        if(item == null) {
+    @SideOnly(Side.CLIENT)
+    public static void renderDroppedItem(EntityItem item, IIcon par2Icon, int par3, float par4, float par5, float par6,
+        float par7, int pass) {
+        if (item == null) {
             return;
         }
 
-		Tessellator tessellator = Tessellator.instance;
+        Tessellator tessellator = Tessellator.instance;
 
         if (par2Icon == null) {
-            TextureManager texturemanager = Minecraft.getMinecraft().getTextureManager();
-            ResourceLocation resourcelocation = texturemanager.getResourceLocation(item.getEntityItem().getItemSpriteNumber());
-            par2Icon = ((TextureMap)texturemanager.getTexture(resourcelocation)).getAtlasSprite("missingno");
+            TextureManager texturemanager = Minecraft.getMinecraft()
+                .getTextureManager();
+            ResourceLocation resourcelocation = texturemanager.getResourceLocation(
+                item.getEntityItem()
+                    .getItemSpriteNumber());
+            par2Icon = ((TextureMap) texturemanager.getTexture(resourcelocation)).getAtlasSprite("missingno");
         }
 
-        float f14 = ((IIcon)par2Icon).getMinU();
-        float f15 = ((IIcon)par2Icon).getMaxU();
-        float f4 = ((IIcon)par2Icon).getMinV();
-        float f5 = ((IIcon)par2Icon).getMaxV();
+        float f14 = ((IIcon) par2Icon).getMinU();
+        float f15 = ((IIcon) par2Icon).getMaxU();
+        float f4 = ((IIcon) par2Icon).getMinV();
+        float f5 = ((IIcon) par2Icon).getMaxV();
         float f6 = 1.0F;
         float f7 = 0.5F;
         float f8 = 0.25F;
@@ -283,32 +295,32 @@ public class ClientPhysic {
             GL11.glPushMatrix();
 
             if (RenderItem.renderInFrame) {
-            	GL11.glTranslatef(0.0F, 0.09F, 0.0F);
+                GL11.glTranslatef(0.0F, 0.09F, 0.0F);
                 GL11.glRotatef(180.0F, 0.0F, 1.0F, 0.0F);
-            } else if(item.prevPosY != item.posY || item.onGround) {
-            	GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
-            	GL11.glRotatef(item.rotationYaw, 0.0F, 0.0F, 1.0F);
+            } else if (item.prevPosY != item.posY || item.onGround) {
+                GL11.glRotatef(90.0F, 1.0F, 0.0F, 0.0F);
+                GL11.glRotatef(item.rotationYaw, 0.0F, 0.0F, 1.0F);
             }
 
-            if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY) && !Double.isNaN(item.posZ) && item.worldObj != null && !RenderItem.renderInFrame && item.age != 0) {
-	            if (item.onGround || item.prevPosY == item.posY)
-                    item.rotationPitch = 0;
-	            else {
-                    double rotation = ClientPhysic.rotation*2;
+            if (!Double.isNaN(item.posX) && !Double.isNaN(item.posY)
+                && !Double.isNaN(item.posZ)
+                && item.worldObj != null
+                && !RenderItem.renderInFrame
+                && item.age != 0) {
+                if (item.onGround || item.prevPosY == item.posY) item.rotationPitch = 0;
+                else {
+                    double rotation = ClientPhysic.rotation * 2;
                     Fluid fluid = ServerPhysic.getFluid(item);
-                    if(fluid != null)
-                        rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+                    if (fluid != null) rotation /= (float) ((fluid.getDensity() / 1000) * 10);
                     else {
                         fluid = ServerPhysic.getFluid(item, true);
-                        if(fluid != null)
-                            rotation /= (float) ((fluid.getDensity() / 1000) * 10);
+                        if (fluid != null) rotation /= (float) ((fluid.getDensity() / 1000) * 10);
                     }
                     try {
-                        if (isInWeb.getBoolean(item))
-                            rotation /= 50;
+                        if (isInWeb.getBoolean(item)) rotation /= 50;
                     } catch (IllegalArgumentException | IllegalAccessException ignored) {}
                     item.rotationPitch += rotation;
-	            }
+                }
             }
 
             GL11.glRotatef(item.rotationPitch, 1.0F, 0.0F, 0.0F);
@@ -326,23 +338,30 @@ public class ClientPhysic {
 
             b0 = getMiniItemCount(itemstack, b0);
 
-            GL11.glTranslatef(-f7, -f8, -((f9 + f10) * (float)b0 / 2.0F));
+            GL11.glTranslatef(-f7, -f8, -((f9 + f10) * (float) b0 / 2.0F));
 
             for (int k = 0; k < b0; ++k) {
                 // Makes items offset when in 3D, like when in 2D, looks much better. Considered a vanilla bug...
                 if (k > 0 && ItemRenderer.shouldSpreadItems()) {
-                    //float x = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
-                    //float y = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
-                    //float z = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+                    // float x = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+                    // float y = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
+                    // float z = (random.nextFloat() * 2.0F - 1.0F) * 0.3F / 0.5F;
                     GL11.glTranslatef(0, 0, f9 + f10);
-                }
-                else GL11.glTranslatef(0f, 0f, f9 + f10);
+                } else GL11.glTranslatef(0f, 0f, f9 + f10);
 
                 if (itemstack.getItemSpriteNumber() == 0) mc.renderEngine.bindTexture(TextureMap.locationBlocksTexture);
                 else mc.renderEngine.bindTexture(TextureMap.locationItemsTexture);
 
                 GL11.glColor4f(par5, par6, par7, 1.0F);
-                net.minecraft.client.renderer.ItemRenderer.renderItemIn2D(tessellator, f15, f4, f14, f5, ((IIcon)par2Icon).getIconWidth(), ((IIcon)par2Icon).getIconHeight(), f9);
+                net.minecraft.client.renderer.ItemRenderer.renderItemIn2D(
+                    tessellator,
+                    f15,
+                    f4,
+                    f14,
+                    f5,
+                    ((IIcon) par2Icon).getIconWidth(),
+                    ((IIcon) par2Icon).getIconHeight(),
+                    f9);
 
                 if (itemstack.hasEffect(pass)) {
                     GL11.glDepthFunc(GL11.GL_EQUAL);
@@ -356,17 +375,19 @@ public class ClientPhysic {
                     GL11.glPushMatrix();
                     float f12 = 0.125F;
                     GL11.glScalef(f12, f12, f12);
-                    float f13 = (float)(Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
+                    float f13 = (float) (Minecraft.getSystemTime() % 3000L) / 3000.0F * 8.0F;
                     GL11.glTranslatef(f13, 0.0F, 0.0F);
                     GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
-                    net.minecraft.client.renderer.ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 255, 255, f9);
+                    net.minecraft.client.renderer.ItemRenderer
+                        .renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 255, 255, f9);
                     GL11.glPopMatrix();
                     GL11.glPushMatrix();
                     GL11.glScalef(f12, f12, f12);
-                    f13 = (float)(Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
+                    f13 = (float) (Minecraft.getSystemTime() % 4873L) / 4873.0F * 8.0F;
                     GL11.glTranslatef(-f13, 0.0F, 0.0F);
                     GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
-                    net.minecraft.client.renderer.ItemRenderer.renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 255, 255, f9);
+                    net.minecraft.client.renderer.ItemRenderer
+                        .renderItemIn2D(tessellator, 0.0F, 0.0F, 1.0F, 1.0F, 255, 255, f9);
                     GL11.glPopMatrix();
                     GL11.glMatrixMode(GL11.GL_MODELVIEW);
                     GL11.glDisable(GL11.GL_BLEND);
@@ -388,26 +409,29 @@ public class ClientPhysic {
                     GL11.glTranslatef(f10, f16, f17);
                 }
 
-                if (!RenderItem.renderInFrame) GL11.glRotatef(180.0F - RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
+                if (!RenderItem.renderInFrame)
+                    GL11.glRotatef(180.0F - RenderManager.instance.playerViewY, 0.0F, 1.0F, 0.0F);
 
                 GL11.glColor4f(par5, par6, par7, 1.0F);
                 tessellator.startDrawingQuads();
                 tessellator.setNormal(0.0F, 1.0F, 0.0F);
-                tessellator.addVertexWithUV((double)(0.0F - f7), (double)(0.0F - f8), 0.0D, (double)f14, (double)f5);
-                tessellator.addVertexWithUV((double)(f6 - f7), (double)(0.0F - f8), 0.0D, (double)f15, (double)f5);
-                tessellator.addVertexWithUV((double)(f6 - f7), (double)(1.0F - f8), 0.0D, (double)f15, (double)f4);
-                tessellator.addVertexWithUV((double)(0.0F - f7), (double)(1.0F - f8), 0.0D, (double)f14, (double)f4);
+                tessellator
+                    .addVertexWithUV((double) (0.0F - f7), (double) (0.0F - f8), 0.0D, (double) f14, (double) f5);
+                tessellator.addVertexWithUV((double) (f6 - f7), (double) (0.0F - f8), 0.0D, (double) f15, (double) f5);
+                tessellator.addVertexWithUV((double) (f6 - f7), (double) (1.0F - f8), 0.0D, (double) f15, (double) f4);
+                tessellator
+                    .addVertexWithUV((double) (0.0F - f7), (double) (1.0F - f8), 0.0D, (double) f14, (double) f4);
                 tessellator.draw();
                 GL11.glPopMatrix();
             }
         }
     }
 
-	public static byte getMiniBlockCount(ItemStack stack, byte original) {
+    public static byte getMiniBlockCount(ItemStack stack, byte original) {
         return original;
     }
 
-	public static byte getMiniItemCount(ItemStack stack, byte original) {
+    public static byte getMiniItemCount(ItemStack stack, byte original) {
         return original;
     }
 }
