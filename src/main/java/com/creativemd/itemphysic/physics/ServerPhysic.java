@@ -30,6 +30,7 @@ import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.fluids.IFluidBlock;
+import net.minecraftforge.oredict.OreDictionary;
 import org.apache.logging.log4j.LogManager;
 
 import java.util.Iterator;
@@ -286,8 +287,14 @@ public class ServerPhysic {
             int i = itemstack.stackSize;
 
             if ((ItemPhysic.customPickup | item.delayBeforeCanPickup <= 0) && (item.func_145798_i() == null || item.lifespan - item.age <= 200 || item.func_145798_i().equals(par1EntityPlayer.getCommandSenderName())) && (event.getResult() == Result.ALLOW || i <= 0 || par1EntityPlayer.inventory.addItemStackToInventory(itemstack))) {
-                if (itemstack.getItem() == Item.getItemFromBlock(Blocks.log)) par1EntityPlayer.triggerAchievement(AchievementList.mineWood);
-                if (itemstack.getItem() == Item.getItemFromBlock(Blocks.log2)) par1EntityPlayer.triggerAchievement(AchievementList.mineWood);
+    
+                for (int id : OreDictionary.getOreIDs(itemstack)) {
+                    if (OreDictionary.getOreID("logWood") == id) {
+                        par1EntityPlayer.triggerAchievement(AchievementList.mineWood);
+                        break;
+                    }
+                }
+                
                 if (itemstack.getItem() == Items.leather) par1EntityPlayer.triggerAchievement(AchievementList.killCow);
                 if (itemstack.getItem() == Items.diamond) par1EntityPlayer.triggerAchievement(AchievementList.diamonds);
                 if (itemstack.getItem() == Items.blaze_rod) par1EntityPlayer.triggerAchievement(AchievementList.blazeRod);
