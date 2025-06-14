@@ -2,7 +2,7 @@
   "modListVersion": 2,
   "modList": [{
   "modid": "${modId}",
-  "name": "{modName}",
+  "name": "${modName}",
   "description": "Minecraft mod that adds physics to thrown items.",
   "version": "${modVersion}",
   "mcversion": "${minecraftVersion}",
