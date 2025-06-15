@@ -16,7 +16,6 @@ import com.creativemd.itemphysic.list.IgnitingListRegistry;
 import com.creativemd.itemphysic.list.SulfuricAcidListRegistry;
 import com.creativemd.itemphysic.list.UndestroyableListRegistry;
 import com.creativemd.itemphysic.packet.PacketDispatcher;
-import com.creativemd.itemphysic.physics.ClientPhysic;
 import com.creativemd.itemphysic.proxy.CommonProxy;
 
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -26,9 +25,6 @@ import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.gameevent.TickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 @Mod(
     modid = MODID,
@@ -104,12 +100,6 @@ public class ItemPhysic {
         FMLCommonHandler.instance()
             .bus()
             .register(new EventHandler());
-    }
-
-    @Mod.EventHandler
-    @SideOnly(Side.CLIENT)
-    public void onRender(TickEvent.RenderTickEvent evt) {
-        ClientPhysic.tick = System.nanoTime();
     }
 
     public static boolean isHBMLoaded = false;

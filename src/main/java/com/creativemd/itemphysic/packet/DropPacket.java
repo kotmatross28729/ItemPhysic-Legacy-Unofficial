@@ -43,7 +43,6 @@ public class DropPacket implements IMessage {
 
         @Override
         public IMessage onMessage(DropPacket m, MessageContext ctx) {
-
             EntityPlayer player = ctx.getServerHandler().playerEntity;
             EventHandler.DropPower = m.power;
             dropOneItemCustom(player, m.control);

@@ -68,17 +68,6 @@ public class ServerPhysic {
         return null;
     }
 
-    public static double lastPosY;
-
-    public static void updatePositionBefore(EntityItem item) {
-        lastPosY = item.posY;
-    }
-
-    public static void updatePosition(EntityItem item) {
-        double diff = Math.sqrt(Math.pow(lastPosY - item.posY, 2));
-        if (diff < 0.5D && diff > 0) item.setPosition(item.posX, lastPosY, item.posZ);
-    }
-
     public static void onCollideWithPlayer(Random rand, EntityItem item, EntityPlayer par1EntityPlayer,
         boolean needsSneak) {
         if (ItemPhysicConfig.customPickup && needsSneak && !par1EntityPlayer.isSneaking()) return;

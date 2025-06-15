@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import com.creativemd.itemphysic.config.ItemPhysicConfig;
 
-@Mixin(value = EntityClientPlayerMP.class, priority = 1006)
+@Mixin(value = EntityClientPlayerMP.class, priority = 456)
 public class MixinEntityClientPlayerMP {
 
     @Inject(method = "dropOneItem", at = @At(value = "HEAD"), cancellable = true)

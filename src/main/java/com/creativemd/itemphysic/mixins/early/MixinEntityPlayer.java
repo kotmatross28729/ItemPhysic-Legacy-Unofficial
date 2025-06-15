@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import com.creativemd.itemphysic.config.ItemPhysicConfig;
 
-@Mixin(value = EntityPlayer.class, priority = 1006)
+@Mixin(value = EntityPlayer.class, priority = 456)
 public abstract class MixinEntityPlayer extends EntityLivingBase implements ICommandSender {
 
     public MixinEntityPlayer(World p_i1594_1_) {
