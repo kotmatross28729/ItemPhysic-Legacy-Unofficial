@@ -4,8 +4,11 @@ A minecraft forge mod that adds some physic to thrown items.
 ---
 
 #### Dependencies:
-- [CreativeCore GTNH version](https://github.com/GTNewHorizons/CreativeCore/releases)
-  - You can use the official version, but I don't recommend it
+
+- [1.2.8+]
+   - [Unimixins](https://github.com/LegacyModdingMC/UniMixins/releases)
+- [1.2.7-]
+   - [CreativeCore GTNH version](https://github.com/GTNewHorizons/CreativeCore/releases)
 
 ---
 ### Changes with the original version:
