@@ -157,24 +157,26 @@ public abstract class MixinEntityItem extends Entity {
             opcode = Opcodes.GETFIELD,
             ordinal = 0))
     public void addIgniting(CallbackInfo ci) {
-        Block block = itemPhysic$thiz.worldObj.getBlock(
-            MathHelper.floor_double(itemPhysic$thiz.posX),
-            MathHelper.floor_double(itemPhysic$thiz.posY),
-            MathHelper.floor_double(itemPhysic$thiz.posZ));
-
-        if (itemPhysic$thiz.onGround && ServerPhysic.canItemIgnite(itemPhysic$stack)
-            && (block.getMaterial() == Material.air || block.getMaterial() == Material.plants
-                || block.getMaterial() == Material.vine
-                || block.getMaterial() == Material.carpet)
-
-            && itemPhysic$thiz.worldObj.rand.nextInt(100) <= ServerPhysic.getIgnitingChance(itemPhysic$stack)) {
-            itemPhysic$thiz.worldObj.setBlock(
+        if (!itemPhysic$thiz.worldObj.isRemote) {
+            Block block = itemPhysic$thiz.worldObj.getBlock(
                 MathHelper.floor_double(itemPhysic$thiz.posX),
                 MathHelper.floor_double(itemPhysic$thiz.posY),
-                MathHelper.floor_double(itemPhysic$thiz.posZ),
-                ServerPhysic.getIgnitingBlock(itemPhysic$stack),
-                ServerPhysic.getIgnitingBlockMeta(itemPhysic$stack),
-                3);
+                MathHelper.floor_double(itemPhysic$thiz.posZ));
+
+            if (itemPhysic$thiz.onGround && ServerPhysic.canItemIgnite(itemPhysic$stack)
+                && (block.getMaterial() == Material.air || block.getMaterial() == Material.plants
+                    || block.getMaterial() == Material.vine
+                    || block.getMaterial() == Material.carpet)
+
+                && itemPhysic$thiz.worldObj.rand.nextInt(100) <= ServerPhysic.getIgnitingChance(itemPhysic$stack)) {
+                itemPhysic$thiz.worldObj.setBlock(
+                    MathHelper.floor_double(itemPhysic$thiz.posX),
+                    MathHelper.floor_double(itemPhysic$thiz.posY),
+                    MathHelper.floor_double(itemPhysic$thiz.posZ),
+                    ServerPhysic.getIgnitingBlock(itemPhysic$stack),
+                    ServerPhysic.getIgnitingBlockMeta(itemPhysic$stack),
+                    3);
+            }
         }
     }
 

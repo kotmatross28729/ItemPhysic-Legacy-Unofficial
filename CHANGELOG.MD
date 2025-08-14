@@ -1,3 +1,7 @@
+# 1.2.9
+
+- Fixed a bug where fire from ignitable items could be placed on the client side (server desync)
+
 # 1.2.8
 
 #### WARNING:
