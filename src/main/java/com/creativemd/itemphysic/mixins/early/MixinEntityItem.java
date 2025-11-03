@@ -190,7 +190,7 @@ public abstract class MixinEntityItem extends Entity {
     public void addFallSound(CallbackInfo ci) {
         if (itemPhysic$thiz.onGround && itemPhysic$thiz.prevPosY != itemPhysic$thiz.posY
             && ItemPhysicConfig.enableFallSounds) {
-            itemPhysic$thiz.playSound(ItemPhysicConfig.itemDropSound, 1F, (float) Math.random() + 1);
+            itemPhysic$thiz.playSound(ItemPhysicConfig.itemFallSound, ItemPhysicConfig.itemFallSoundVolume, (float) Math.random() + 1);
         }
     }
 

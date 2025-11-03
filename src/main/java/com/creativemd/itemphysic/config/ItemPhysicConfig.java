@@ -35,6 +35,7 @@ public class ItemPhysicConfig {
     public static boolean disableCactusDamage;
     public static boolean showPickupTooltip = true;
     public static boolean enableFallSounds = true;
+    public static float itemFallSoundVolume = 0.2F;
     public static float rotationSpeed = 1.0F;
     public static int throwPowerTickCoefficient;
     public static int throwPowerMax;
@@ -51,7 +52,7 @@ public class ItemPhysicConfig {
     public static String CATEGORY_ACID = "listSulfuricAcid";
     public static String CATEGORY_IGNITING = "listIgnitingItems";
 
-    public static String itemDropSound;
+    public static String itemFallSound;
 
     public static void loadGeneralConfig(Configuration config) {
         enableItemDespawn = config.getBoolean(
@@ -85,11 +86,18 @@ public class ItemPhysicConfig {
             CATEGORY_GENERAL,
             true,
             "Whether to allow items to make a sound when they fall.");
-        itemDropSound = config.getString(
-            "itemDropSound",
-            Configuration.CATEGORY_GENERAL,
+        itemFallSound = config.getString(
+            "itemFallSound",
+            CATEGORY_GENERAL,
             "dig.stone",
             "Sound played when an item hits the ground.");
+        itemFallSoundVolume = config.getFloat(
+            "itemFallSoundVolume",
+            CATEGORY_GENERAL,
+            0.2F,
+            0,
+            1,
+            "Volume of sound played when an item hits the ground.");
         showPickupTooltip = config.getBoolean(
             "showPickupTooltip",
             CATEGORY_GENERAL,
