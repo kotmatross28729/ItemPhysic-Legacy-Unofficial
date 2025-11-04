@@ -42,6 +42,8 @@ public abstract class MixinEntityItem extends Entity {
     ItemStack itemPhysic$stack;
     @Unique
     EntityItem itemPhysic$thiz;
+    @Unique
+    private boolean itemPhysic$hasPlayedFallSound = false;
 
     @Inject(method = "onUpdate", at = @At(value = "HEAD"))
     public void initFields(CallbackInfo ci) {
@@ -188,9 +190,33 @@ public abstract class MixinEntityItem extends Entity {
             opcode = Opcodes.GETFIELD,
             ordinal = 0))
     public void addFallSound(CallbackInfo ci) {
-        if (itemPhysic$thiz.onGround && itemPhysic$thiz.prevPosY != itemPhysic$thiz.posY
-            && ItemPhysicConfig.enableFallSounds) {
-            itemPhysic$thiz.playSound(ItemPhysicConfig.itemFallSound, ItemPhysicConfig.itemFallSoundVolume, (float) Math.random() + 1);
+        boolean onGround = itemPhysic$thiz.onGround;
+
+        // Reset the flag if item is in the air
+        if (!onGround) {
+            itemPhysic$hasPlayedFallSound = false;
+            return;
+        }
+
+        // Play sound only once when item lands
+        if (!itemPhysic$hasPlayedFallSound && ItemPhysicConfig.enableFallSounds) {
+            itemPhysic$hasPlayedFallSound = true;
+
+            String soundName = ItemPhysicConfig.itemFallSound; // default fallback
+
+            if (ItemPhysicConfig.enableContextSensitiveFallSounds) {
+                int x = MathHelper.floor_double(itemPhysic$thiz.posX);
+                int y = MathHelper.floor_double(itemPhysic$thiz.posY - 0.5D);
+                int z = MathHelper.floor_double(itemPhysic$thiz.posZ);
+                Block blockUnder = itemPhysic$thiz.worldObj.getBlock(x, y, z);
+
+                if (blockUnder != null && blockUnder.getMaterial() != Material.air) {
+                    soundName = "step." + blockUnder.stepSound.soundName;
+                }
+            }
+
+            float pitch = 1.0F + itemPhysic$thiz.worldObj.rand.nextFloat(); // random pitch
+            itemPhysic$thiz.playSound(soundName, ItemPhysicConfig.itemFallSoundVolume, pitch);
         }
     }
 

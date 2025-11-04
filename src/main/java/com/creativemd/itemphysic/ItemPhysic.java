@@ -35,10 +35,10 @@ public class ItemPhysic {
 
     public static final String MODID = "itemphysic";
     public static final String NAME = "ItemPhysic";
-    public static final String VERSION = "1.2.11" + " kotmatross edition";
+    public static final String VERSION = "1.2.12" + " kotmatross edition";
     public static final String CLIENTPROXY = "com.creativemd.itemphysic.proxy.ClientProxy";
     public static final String SERVERPROXY = "com.creativemd.itemphysic.proxy.CommonProxy";
-    public static final String VERSION2 = "1.2.11";
+    public static final String VERSION2 = "1.2.12";
 
     @Mod.Instance(MODID)
     public static ItemPhysic instance;
@@ -50,6 +50,7 @@ public class ItemPhysic {
 
     protected static void syncConfig() {
         ItemPhysicConfig.loadGeneralConfig(config);
+        ItemPhysicConfig.loadSoundConfig(config);
         ItemPhysicConfig.loadBurnListConfig(config);
         ItemPhysicConfig.loadFloatListConfig(config);
         ItemPhysicConfig.loadExplosionListConfig(config);
