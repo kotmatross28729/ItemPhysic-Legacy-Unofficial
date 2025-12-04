@@ -120,10 +120,8 @@ public class ItemPhysicConfig {
             CATEGORY_SOUND,
             true,
             "Whether to allow items to make a sound at all when they fall.");
-        itemFallSound = config.getString(
-            "itemDropSound",
-            CATEGORY_SOUND,
-            "step.stone",
+        itemFallSound = config.getString("itemDropSound",
+            CATEGORY_SOUND, "step.stone",
             "Sound played when an item hits the ground.");
         enableContextSensitiveFallSounds = config.getBoolean(
             "enableContextSensitiveDropSounds",
