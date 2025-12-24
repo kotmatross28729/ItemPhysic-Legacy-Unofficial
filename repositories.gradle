@@ -1,7 +1,15 @@
 // Add any additional repositories for your dependencies here.
 
 repositories {
-    flatDir {
-        dirs 'libs'
+    maven {
+        name = "Jitpack"
+        url = "https://jitpack.io"
+    }
+    maven {
+        name = 'mavenpattern'
+        url = 'https://mvn.falsepattern.com/releases'
+        content {
+            includeGroup 'com.falsepattern'
+        }
     }
 }

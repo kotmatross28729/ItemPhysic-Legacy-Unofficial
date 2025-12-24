@@ -8,6 +8,7 @@ public class ItemPhysicMixinConfig {
 
     public static boolean MixinEntityItem;
     public static boolean MixinRenderItem;
+    public static boolean MixinEntityItemSound;
     public static boolean MixinEntityClientPlayerMP;
     public static boolean MixinEntityPlayer;
     static final String categoryMixins = "Mixins: change with caution";
@@ -25,6 +26,11 @@ public class ItemPhysicMixinConfig {
             categoryMixins,
             true,
             "Basic renderer of item physic. When disabled: 1) items will be rendered like in vanilla (without rotation, with spinning and levitating a little).");
+        MixinEntityItemSound = config.getBoolean(
+            "MixinEntityItemSound",
+            categoryMixins,
+            true,
+            "Enables item sound mixin. When disabled: 1) Items will not make a sound on fall.");
         MixinEntityClientPlayerMP = config.getBoolean(
             "MixinEntityClientPlayerMP",
             categoryMixins,

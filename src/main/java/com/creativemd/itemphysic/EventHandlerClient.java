@@ -61,6 +61,7 @@ public class EventHandlerClient {
         if (mc == null) mc = Minecraft.getMinecraft();
 
         if (mc != null && mc.thePlayer != null && mc.inGameHasFocus) {
+
             if (ItemPhysicConfig.customPickup) {
                 double distance = 100;
 
@@ -76,15 +77,16 @@ public class EventHandlerClient {
                 if (entity != null && mc.inGameHasFocus && ItemPhysicConfig.showPickupTooltip) {
                     int space = 15;
                     List<String> list = new ArrayList<>();
-                    try {
+
+                    if (entity.getEntityItem() != null && entity.getEntityItem()
+                        .getItem() != null) {
                         list.add(
                             entity.getEntityItem()
                                 .getDisplayName());
                         entity.getEntityItem()
                             .getItem()
                             .addInformation(entity.getEntityItem(), mc.thePlayer, list, true);
-                    } catch (Exception e) {
-                        list = new ArrayList<>();
+                    } else {
                         list.add("ERRORED");
                     }
 
@@ -93,8 +95,8 @@ public class EventHandlerClient {
                         width = Math.max(width, mc.fontRenderer.getStringWidth(text));
                         height += mc.fontRenderer.FONT_HEIGHT;
                     }
-                    width += 10; // Add padding
-                    height += space * (list.size() - 1); // Add padding
+                    width += 10;
+                    height += space * (list.size() - 1);
 
                     ScaledResolution resolution = new ScaledResolution(mc, mc.displayWidth, mc.displayHeight);
                     int centerX = resolution.getScaledWidth() / 2;
@@ -149,9 +151,6 @@ public class EventHandlerClient {
                     }
                 }
 
-                // To avoid FPS influence on this. (Before 20 fps - 20 ticks per second, 60 fps - 60 ticks per second ->
-                // 3 times faster)
-                // Why? Because for some reason we do this in the renderer 0_____0
                 long currentTickCount = mc.theWorld.getTotalWorldTime();
                 if (currentTickCount != lastTickCount) {
                     lastTickCount = currentTickCount;
@@ -204,10 +203,10 @@ public class EventHandlerClient {
         OpenGlHelper.glBlendFunc(770, 771, 1, 0);
         GL11.glColor4d(color.xCoord, color.yCoord, color.zCoord, alpha);
         tessellator.startDrawingQuads();
-        tessellator.addVertex((double) x1, (double) y2, 0.0D);
-        tessellator.addVertex((double) x2, (double) y2, 0.0D);
-        tessellator.addVertex((double) x2, (double) y1, 0.0D);
-        tessellator.addVertex((double) x1, (double) y1, 0.0D);
+        tessellator.addVertex(x1, y2, 0.0D);
+        tessellator.addVertex(x2, y2, 0.0D);
+        tessellator.addVertex(x2, y1, 0.0D);
+        tessellator.addVertex(x1, y1, 0.0D);
         tessellator.draw();
         GL11.glEnable(GL11.GL_TEXTURE_2D);
         GL11.glDisable(GL11.GL_BLEND);

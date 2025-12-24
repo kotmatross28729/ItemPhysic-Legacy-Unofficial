@@ -29,6 +29,7 @@ public class ItemPhysicEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoad
 
         List<String> mixins = new ArrayList<>();
 
+        if (ItemPhysicMixinConfig.MixinEntityItemSound) mixins.add("MixinEntityItem_sound");
         if (ItemPhysicMixinConfig.MixinEntityItem) mixins.add("MixinEntityItem");
         if (ItemPhysicMixinConfig.MixinRenderItem) mixins.add("MixinRenderItem");
         if (ItemPhysicMixinConfig.MixinEntityClientPlayerMP) mixins.add("MixinEntityClientPlayerMP");
@@ -53,9 +54,7 @@ public class ItemPhysicEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoad
     }
 
     @Override
-    public void injectData(Map<String, Object> data) {
-
-    }
+    public void injectData(Map<String, Object> data) {}
 
     @Override
     public String getAccessTransformerClass() {

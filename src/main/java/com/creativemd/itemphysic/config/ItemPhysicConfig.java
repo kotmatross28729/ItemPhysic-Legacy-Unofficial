@@ -33,17 +33,23 @@ public class ItemPhysicConfig {
     public static boolean customThrow;
     public static boolean showPowerText;
     public static boolean disableCactusDamage;
-    public static boolean showPickupTooltip = true;
-    public static boolean enableFallSounds = true;
-    public static float rotationSpeed = 1.0F;
+    public static boolean showPickupTooltip;
+    public static float rotationSpeed;
     public static int throwPowerTickCoefficient;
     public static int throwPowerMax;
     public static int playerPickupExpansionXZ;
     public static int playerPickupExpansionY;
+    public static boolean enableFallSounds;
+    public static boolean enableMaterialSensitiveFallSounds;
+    public static float itemFallSoundVolume;
+    public static String itemFallSound;
 
     // ------------------------------------------------
 
     public static String CATEGORY_GENERAL = "general";
+    public static String CATEGORY_SOUND = "sound";
+
+    /// LISTS
     public static String CATEGORY_BURN = "listBurn";
     public static String CATEGORY_FLOAT = "listFloat";
     public static String CATEGORY_EXPLOSION = "listExplosion";
@@ -78,11 +84,6 @@ public class ItemPhysicConfig {
             .getBoolean("showPowerText", CATEGORY_GENERAL, true, "Whether to enable a \"Power\" text above HUD");
         disableCactusDamage = config
             .getBoolean("disableCactusDamage", CATEGORY_GENERAL, true, "Whether to disable cactus damage for items");
-        enableFallSounds = config.getBoolean(
-            "enableFallSounds",
-            CATEGORY_GENERAL,
-            true,
-            "Whether to allow items to make a sound when they fall.");
         showPickupTooltip = config.getBoolean(
             "showPickupTooltip",
             CATEGORY_GENERAL,
@@ -113,6 +114,33 @@ public class ItemPhysicConfig {
             2147483647,
             "Extends the distance in Y from which the player automatically (if customPickup is enabled, then by pressing shift) picks up items.");
     }
+
+    public static void loadSoundConfig(Configuration config) {
+        enableFallSounds = config.getBoolean(
+            "enableDropSounds",
+            CATEGORY_SOUND,
+            true,
+            "Whether to allow items to make a sound at all when they fall.");
+        itemFallSound = config.getString(
+            "itemDropSound",
+            CATEGORY_SOUND,
+            "step.cloth",
+            "Sound played when an item hits the ground (if enableMaterialSensitiveFallSounds is disabled).");
+        enableMaterialSensitiveFallSounds = config.getBoolean(
+            "enableMaterialSensitiveFallSounds",
+            CATEGORY_SOUND,
+            true,
+            "Use the material of the ground the item hits to decide the sound instead.");
+        itemFallSoundVolume = config.getFloat(
+            "itemFallSoundVolume",
+            CATEGORY_SOUND,
+            0.4F,
+            0,
+            64,
+            "Volume of sound played when an item hits the ground.");
+    }
+
+    /// LISTS
 
     public static void loadBurnListConfig(Configuration config) {
         invertBurnList = config.getBoolean(

@@ -35,30 +35,15 @@ public class ItemPhysic {
 
     public static final String MODID = "itemphysic";
     public static final String NAME = "ItemPhysic";
-    public static final String VERSION = "1.2.9" + " kotmatross edition";
+    public static final String VERSION = "1.3.0" + " kotmatross edition";
     public static final String CLIENTPROXY = "com.creativemd.itemphysic.proxy.ClientProxy";
     public static final String SERVERPROXY = "com.creativemd.itemphysic.proxy.CommonProxy";
-    public static final String VERSION2 = "1.2.9";
-
-    @Mod.Instance(MODID)
-    public static ItemPhysic instance;
+    public static final String VERSION2 = "1.3.0";
 
     @SidedProxy(clientSide = CLIENTPROXY, serverSide = SERVERPROXY)
     public static CommonProxy proxy;
 
     public static Configuration config;
-
-    protected static void syncConfig() {
-        ItemPhysicConfig.loadGeneralConfig(config);
-        ItemPhysicConfig.loadBurnListConfig(config);
-        ItemPhysicConfig.loadFloatListConfig(config);
-        ItemPhysicConfig.loadExplosionListConfig(config);
-        ItemPhysicConfig.loadUndestroyableListConfig(config);
-        ItemPhysicConfig.loadSulfuricAcidListConfig(config);
-        ItemPhysicConfig.loadIgnitingItemsListConfig(config);
-
-        if (config.hasChanged()) config.save();
-    }
 
     @Mod.EventHandler
     public static void preInit(FMLPreInitializationEvent event) {
@@ -85,21 +70,23 @@ public class ItemPhysic {
     @Mod.EventHandler
     public void init(FMLInitializationEvent event) {
         proxy.registerEvents();
-        proxy.init(this);
+        proxy.init();
 
         if (FMLCommonHandler.instance()
             .getSide()
             .isClient()) {
-            MinecraftForge.EVENT_BUS.register(new EventHandlerClient());
+            EventHandlerClient clientHandler = new EventHandlerClient();
+            MinecraftForge.EVENT_BUS.register(clientHandler);
             FMLCommonHandler.instance()
                 .bus()
-                .register(new EventHandlerClient());
+                .register(clientHandler);
         }
 
-        MinecraftForge.EVENT_BUS.register(new EventHandler());
+        EventHandler commonHandler = new EventHandler();
+        MinecraftForge.EVENT_BUS.register(commonHandler);
         FMLCommonHandler.instance()
             .bus()
-            .register(new EventHandler());
+            .register(commonHandler);
     }
 
     public static boolean isHBMLoaded = false;
@@ -109,12 +96,29 @@ public class ItemPhysic {
         if (Loader.isModLoaded("hbm")) {
             isHBMLoaded = true;
         }
+
         BurnListRegistry.registerDefaults();
         FloatListRegistry.registerDefaults();
         ExplosionListRegistry.registerDefaults();
         UndestroyableListRegistry.registerDefaults();
         if (isHBMLoaded) SulfuricAcidListRegistry.registerDefaults();
         IgnitingListRegistry.registerDefaults();
+    }
+
+    protected static void syncConfig() {
+
+        ItemPhysicConfig.loadGeneralConfig(config);
+        ItemPhysicConfig.loadSoundConfig(config);
+
+        /// LISTS
+        ItemPhysicConfig.loadBurnListConfig(config);
+        ItemPhysicConfig.loadFloatListConfig(config);
+        ItemPhysicConfig.loadExplosionListConfig(config);
+        ItemPhysicConfig.loadUndestroyableListConfig(config);
+        ItemPhysicConfig.loadSulfuricAcidListConfig(config);
+        ItemPhysicConfig.loadIgnitingItemsListConfig(config);
+
+        if (config.hasChanged()) config.save();
     }
 
 }

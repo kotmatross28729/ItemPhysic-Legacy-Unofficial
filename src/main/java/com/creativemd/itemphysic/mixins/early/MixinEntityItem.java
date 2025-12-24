@@ -43,9 +43,10 @@ public abstract class MixinEntityItem extends Entity {
     @Unique
     EntityItem itemPhysic$thiz;
 
+    @SuppressWarnings("DataFlowIssue") /// Nuh uh, 'this' is EntityItem
     @Inject(method = "onUpdate", at = @At(value = "HEAD"))
     public void initFields(CallbackInfo ci) {
-        itemPhysic$thiz = (EntityItem) ((Object) this);
+        itemPhysic$thiz = ((EntityItem) ((Object) this));
         itemPhysic$fluid = ServerPhysic.getFluid(itemPhysic$thiz);
         itemPhysic$stack = (itemPhysic$thiz).getDataWatcher()
             .getWatchableObjectItemStack(10);
@@ -55,7 +56,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionY : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionY:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 0))
     private boolean disableMotionYNoFluid(EntityItem instance, double newValue) {
@@ -64,10 +65,7 @@ public abstract class MixinEntityItem extends Entity {
 
     @Inject(
         method = "onUpdate",
-        at = @At(
-            value = "INVOKE",
-            target = "net/minecraft/entity/item/EntityItem.func_145771_j (DDD)Z",
-            shift = At.Shift.BEFORE))
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/item/EntityItem;func_145771_j(DDD)Z"))
     public void fluidPhysics(CallbackInfo ci) {
         if (itemPhysic$fluid != null) {
             double density = (double) itemPhysic$fluid.getDensity() / 1000D;
@@ -90,7 +88,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionY : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionY:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 1))
     private boolean disableMotionY(EntityItem instance, double newValue) {
@@ -101,7 +99,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionX : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionX:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 0))
     private boolean disableMotionX(EntityItem instance, double newValue) {
@@ -112,7 +110,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionZ : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionZ:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 0))
     private boolean disableMotionZ(EntityItem instance, double newValue) {
@@ -123,7 +121,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "INVOKE",
-            target = "net/minecraft/entity/item/EntityItem.playSound (Ljava/lang/String;FF)V",
+            target = "Lnet/minecraft/entity/item/EntityItem;playSound(Ljava/lang/String;FF)V",
             ordinal = 0))
     private boolean checkBurnSound(EntityItem instance, String name, float volume, float pitch) {
         return ServerPhysic.canItemBurn(itemPhysic$stack);
@@ -133,7 +131,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "INVOKE",
-            target = "net/minecraft/entity/item/EntityItem.playSound (Ljava/lang/String;FF)V",
+            target = "Lnet/minecraft/entity/item/EntityItem;playSound(Ljava/lang/String;FF)V",
             ordinal = 0,
             shift = At.Shift.AFTER))
     public void addBurnParticles(CallbackInfo ci) {
@@ -153,7 +151,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/world/World.isRemote:Z",
+            target = "Lnet/minecraft/world/World;isRemote:Z",
             opcode = Opcodes.GETFIELD,
             ordinal = 0))
     public void addIgniting(CallbackInfo ci) {
@@ -180,25 +178,11 @@ public abstract class MixinEntityItem extends Entity {
         }
     }
 
-    @Inject(
-        method = "onUpdate",
-        at = @At(
-            value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.onGround : Z",
-            opcode = Opcodes.GETFIELD,
-            ordinal = 0))
-    public void addFallSound(CallbackInfo ci) {
-        if (itemPhysic$thiz.onGround && itemPhysic$thiz.prevPosY != itemPhysic$thiz.posY
-            && ItemPhysicConfig.enableFallSounds) {
-            itemPhysic$thiz.playSound("dig.cloth", 1F, (float) Math.random() + 1);
-        }
-    }
-
     @WrapWithCondition(
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionY : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionY:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 2))
     private boolean checkBurnSound(EntityItem instance, double newValue) {
@@ -209,7 +193,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.motionY : D",
+            target = "Lnet/minecraft/entity/item/EntityItem;motionY:D",
             opcode = Opcodes.PUTFIELD,
             ordinal = 3))
     private boolean disableMotionYNoFluid2(EntityItem instance, double newValue) {
@@ -220,7 +204,7 @@ public abstract class MixinEntityItem extends Entity {
         method = "onUpdate",
         at = @At(
             value = "FIELD",
-            target = "net/minecraft/entity/item/EntityItem.age : I",
+            target = "Lnet/minecraft/entity/item/EntityItem;age:I",
             opcode = Opcodes.PUTFIELD,
             ordinal = 0),
         cancellable = true)

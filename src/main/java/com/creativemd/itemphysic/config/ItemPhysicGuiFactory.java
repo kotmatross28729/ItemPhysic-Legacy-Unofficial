@@ -19,6 +19,8 @@ public class ItemPhysicGuiFactory implements IModGuiFactory {
 
         private static final IConfigElement<?> general = new ConfigElement<>(
             ItemPhysic.config.getCategory(ItemPhysicConfig.CATEGORY_GENERAL));
+        private static final IConfigElement<?> sound = new ConfigElement<>(
+            ItemPhysic.config.getCategory(ItemPhysicConfig.CATEGORY_SOUND));
         // private static final IConfigElement<?> listBurn = new ConfigElement<>(
         // ItemPhysic.config.getCategory(ItemPhysicConfig.CATEGORY_BURN));
         // private static final IConfigElement<?> listFloat = new ConfigElement<>(
@@ -35,7 +37,7 @@ public class ItemPhysicGuiFactory implements IModGuiFactory {
         public ItemPhysicGuiConfig(GuiScreen parent) {
             super(
                 parent,
-                ImmutableList.of(general),
+                ImmutableList.of(general, sound),
                 // ImmutableList.of(
                 // general,
                 // listBurn,

@@ -42,7 +42,7 @@ public class EventHandler {
         List<Entity> list = player.worldObj.getEntitiesWithinAABBExcludingEntity(
             player,
             player.boundingBox.addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0)
-                .expand((double) f1, (double) f1, (double) f1));
+                .expand(f1, f1, f1));
 
         Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
         double d1 = d0;
@@ -58,7 +58,7 @@ public class EventHandler {
         for (Entity entity : list) {
             if (entity instanceof EntityItem) {
                 float f2 = entity.getCollisionBorderSize();
-                AxisAlignedBB axisalignedbb = entity.boundingBox.expand((double) f2, (double) f2, (double) f2);
+                AxisAlignedBB axisalignedbb = entity.boundingBox.expand(f2, f2, f2);
                 MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
 
                 if (axisalignedbb.isVecInside(vec3)) {

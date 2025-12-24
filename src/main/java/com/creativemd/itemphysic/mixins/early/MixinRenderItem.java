@@ -26,9 +26,9 @@ import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 public abstract class MixinRenderItem extends Render {
     // Applies all the rotations (only clientside!)
 
-    @Inject(method = "doRender", at = @At(value = "HEAD"))
+    @Inject(method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V", at = @At(value = "HEAD"))
     public void setUpRotations(EntityItem item, double x, double y, double z, float par8, float par9, CallbackInfo ci) {
-        ClientPhysic.rotation = (double) (System.nanoTime() - ClientPhysic.tick) / 2500000
+        ClientPhysic.rotation = (double) (System.nanoTime() - ClientPhysic.tick) / 2_500_000
             * ItemPhysicConfig.rotationSpeed;
         if (!Minecraft.getMinecraft().inGameHasFocus) ClientPhysic.rotation = 0;
     }
@@ -43,7 +43,7 @@ public abstract class MixinRenderItem extends Render {
     }
 
     @ModifyArg(
-        method = "doRender",
+        method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V",
         at = @At(
             value = "INVOKE",
             target = "net/minecraftforge/client/ForgeHooksClient.renderEntityItem (Lnet/minecraft/entity/item/EntityItem;Lnet/minecraft/item/ItemStack;FFLjava/util/Random;Lnet/minecraft/client/renderer/texture/TextureManager;Lnet/minecraft/client/renderer/RenderBlocks;I)Z"),
@@ -54,7 +54,7 @@ public abstract class MixinRenderItem extends Render {
     }
 
     @WrapWithCondition(
-        method = "doRender",
+        method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V",
         at = @At(value = "INVOKE", target = "org/lwjgl/opengl/GL11.glRotatef(FFFF)V", ordinal = 0),
         remap = false)
     public boolean disableRotation(float angle, float x, float y, float z) {
@@ -62,7 +62,7 @@ public abstract class MixinRenderItem extends Render {
     }
 
     @Inject(
-        method = "doRender",
+        method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V",
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/block/Block.getRenderType ()I",
@@ -77,7 +77,7 @@ public abstract class MixinRenderItem extends Render {
     }
 
     @Inject(
-        method = "doRender",
+        method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V",
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/client/renderer/RenderBlocks.renderBlockAsItem (Lnet/minecraft/block/Block;IF)V",
@@ -89,7 +89,7 @@ public abstract class MixinRenderItem extends Render {
     }
 
     @Inject(
-        method = "doRender",
+        method = "doRender(Lnet/minecraft/entity/item/EntityItem;DDDFF)V",
         at = @At(
             value = "INVOKE",
             target = "net/minecraft/item/Item.requiresMultipleRenderPasses ()Z",

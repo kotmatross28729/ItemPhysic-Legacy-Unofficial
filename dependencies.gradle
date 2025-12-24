@@ -34,8 +34,15 @@
  * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
  */
 dependencies {
-    compileOnly name: 'HBM-NTM-.1.0.27_X5091'
+
+    devOnlyNonPublishable('com.github.GTNewHorizons:NotEnoughItems:2.8.35-GTNH:dev')
+    devOnlyNonPublishable('com.github.GTNewHorizons:CodeChickenCore:1.4.7:dev')
+    devOnlyNonPublishable("com.github.mist475:DynamicSurroundings:1.0.7.7:dev") { transitive = false }
+    // devOnlyNonPublishable(project.files("libs/soundphysics-1.1.1-dev.jar"))
     
-    compileOnly fileTree(dir: 'libs', include: '*.jar')
-    compileOnly fileTree(dir: 'libs', include: '*.zip')
+    /// Subtitles
+    devOnlyNonPublishable("com.github.Roadhog360:Et-Futurum-Requiem:2.6.2:dev") { transitive = false }
+    
+    /// Ingame config fix
+    devOnlyNonPublishable('com.falsepattern:falsepatternlib-mc1.7.10:1.10.4:dev')
 }
