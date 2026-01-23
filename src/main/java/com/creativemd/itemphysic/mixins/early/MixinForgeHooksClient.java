@@ -23,6 +23,7 @@ import static net.minecraftforge.client.IItemRenderer.ItemRendererHelper.*;
 
 @Mixin(value = ForgeHooksClient.class, priority = 456, remap = false)
 public abstract class MixinForgeHooksClient {
+    //Only for Tconstruct rendering
 
     @Inject(method = "renderEntityItem", at= @At(value = "HEAD"), cancellable = true)
     private static void renderEntityTConstructTool(EntityItem entity, ItemStack item, float bobing, float rotation, Random random, TextureManager engine, RenderBlocks renderBlocks, int count, CallbackInfoReturnable<Boolean> cir) {
