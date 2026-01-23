@@ -1,3 +1,11 @@
+# 1.3.1
+
+- Added support for Tinkers construct items to experience client-side physics by @Gamingb3ast
+
+# 1.3.0
+
+- Expose falling sound customization to config by @donzilzenovka
+
 # 1.2.9
 
 - Fixed a bug where fire from ignitable items could be placed on the client side (server desync)

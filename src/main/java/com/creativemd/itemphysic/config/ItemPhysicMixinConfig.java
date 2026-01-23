@@ -47,9 +47,8 @@ public class ItemPhysicMixinConfig {
             "MixinTConstructRenderTools",
             categoryMixins,
             true,
-            "Basic Physics for Tinkers Construct tools. When disabled: 1) items will be rendered like in vanilla (without rotation, with spinning and levitating a little)."
-        );
-    if (config.hasChanged()) {
+            "Basic Physics for Tinkers Construct tools. When disabled: 1) items will be rendered like in vanilla (without rotation, with spinning and levitating a little).");
+        if (config.hasChanged()) {
             config.save();
         }
     }
