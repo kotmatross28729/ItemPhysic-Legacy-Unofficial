@@ -44,7 +44,7 @@ public class ItemPhysicMixinConfig {
             true,
             "Enables expanded auto pickup distance. When disabled: 1) Auto pickup distance will remain vanilla (playerPickupExpansionXZ and playerPickupExpansionY will be ignored).");
         MixinTConstructRenderTools = config.getBoolean(
-            "MixinForgeHooksClient",
+            "MixinTConstructRenderTools",
             categoryMixins,
             true,
             "Basic Physics for Tinkers Construct tools. When disabled: 1) items will be rendered like in vanilla (without rotation, with spinning and levitating a little)."
