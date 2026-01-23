@@ -41,8 +41,10 @@ dependencies {
 
     compileOnly("com.github.GTNewHorizons:TinkersConstruct:1.14.17-GTNH:dev")
     // devOnlyNonPublishable(project.files("libs/soundphysics-1.1.1-dev.jar"))
+
     /// Subtitles
     devOnlyNonPublishable("com.github.Roadhog360:Et-Futurum-Requiem:2.6.2:dev") { transitive = false }
+
     /// Ingame config fix
     devOnlyNonPublishable('com.falsepattern:falsepatternlib-mc1.7.10:1.10.4:dev')
 }
