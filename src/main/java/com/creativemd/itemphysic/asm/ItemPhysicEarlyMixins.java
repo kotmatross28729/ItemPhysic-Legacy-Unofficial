@@ -34,6 +34,7 @@ public class ItemPhysicEarlyMixins implements IFMLLoadingPlugin, IEarlyMixinLoad
         if (ItemPhysicMixinConfig.MixinRenderItem) mixins.add("MixinRenderItem");
         if (ItemPhysicMixinConfig.MixinEntityClientPlayerMP) mixins.add("MixinEntityClientPlayerMP");
         if (ItemPhysicMixinConfig.MixinEntityPlayer) mixins.add("MixinEntityPlayer");
+        if (ItemPhysicMixinConfig.MixinTConstructRenderTools) mixins.add("MixinForgeHooksClient");
 
         return mixins;
     }
