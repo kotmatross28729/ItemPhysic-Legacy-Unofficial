@@ -11,6 +11,8 @@ public class ItemPhysicMixinConfig {
     public static boolean MixinEntityItemSound;
     public static boolean MixinEntityClientPlayerMP;
     public static boolean MixinEntityPlayer;
+    public static boolean MixinTConstructRenderTools;
+
     static final String categoryMixins = "Mixins: change with caution";
 
     public static void loadMixinConfig(File configFile) {
@@ -41,8 +43,13 @@ public class ItemPhysicMixinConfig {
             categoryMixins,
             true,
             "Enables expanded auto pickup distance. When disabled: 1) Auto pickup distance will remain vanilla (playerPickupExpansionXZ and playerPickupExpansionY will be ignored).");
-
-        if (config.hasChanged()) {
+        MixinTConstructRenderTools = config.getBoolean(
+            "MixinTConstructRenderTools",
+            categoryMixins,
+            true,
+            "Basic Physics for Tinkers Construct tools. When disabled: 1) items will be rendered like in vanilla (without rotation, with spinning and levitating a little)."
+        );
+    if (config.hasChanged()) {
             config.save();
         }
     }
